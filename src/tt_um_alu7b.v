@@ -1,35 +1,4 @@
-/*
- * tt_um_alu7b.v — TinyTapeout top-level for the 7-bit serial→parallel ALU
- *
- * Bootcamp IC Design & Fabrication — IEEE OpenSilicon / IEEE CASS UTP 2026
- *
- * Implements the serial receive FSM and instantiates the combinational alu_7b
- * module.
- *
- * SERIAL INPUT PROTOCOL  (ui_in[0] = Bit_in, LSB first):
- *
- *   Posedge  1 ..  7  → Operand A [6:0]
- *   Posedge  8 .. 14  → Operand B [6:0]
- *   Posedge 15        → FSM S_CALC: result latched in uo_out, Done=1 on uio_out[0]
- *
- * OPCODE (parallel input):
- *   ui_in[3:1] = op[2:0]  — stable during the entire operation
- *
- * LSB-FIRST SHIFT REGISTER (shift-right, new bit enters at MSB):
- *   reg <= {bit_in, reg[N-1:1]}
- *   After N posedges: reg[N-1]=MSB ... reg[0]=LSB  ✓
- *
- * OUTPUTS:
- *   uo_out[7:0]  — 8-bit parallel result
- *   uio_out[0]   — Done: one-cycle high pulse when result is ready
- *
- * RESET:
- *   rst_n = 0 → synchronous reset to initial state; all registers cleared
- *
- * SPDX-License-Identifier: Apache-2.0
- */
 
-/* verilator lint_off TIMESCALEMOD */
 `default_nettype none
 
 module tt_um_alu7b (
